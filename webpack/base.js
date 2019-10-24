@@ -3,7 +3,6 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const GoogleFontsPlugin = require('google-fonts-plugin');
 
 const PATHS = {
   src: path.join(__dirname, '../src'),
@@ -62,21 +61,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./index.html"
     }),
-    new GoogleFontsPlugin({
-      fonts: [
-        { family: 'Fredoka One' }
-      ],
-      formats: [
-        "ttf",
-        "woff",
-        "woff2",
-        "eot",
-        "svg"
-      ],
-      filename: '../src/assets/fonts/fonts.css'
-    }),
     new CopyWebpackPlugin([
-      { from: `${PATHS.src}/assets/fonts`, to: `fonts/` },
+      // { from: `${PATHS.src}/assets/fonts`, to: `fonts/` },
 		]),
   ]
 };

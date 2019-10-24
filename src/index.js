@@ -1,8 +1,10 @@
 import Phaser from 'phaser';
 import Image from './scripts/images';
 import TitleScene from './scenes/TitleScene';
+import TutorialScene from './scenes/TutorialScene';
 
 const titleScene = new TitleScene();
+// const tutorialScene = new TutorialScene();
 
 const config = {
   // parent: "phaser-example",
@@ -31,6 +33,7 @@ const config = {
 const game = new Phaser.Game(config);
 game.scene.add('TitleScene', titleScene);
 game.scene.start('TitleScene');
+// game.scene.add('TutorialScene');
 
 function preload() {
   this.load.image('score', Image.score);
