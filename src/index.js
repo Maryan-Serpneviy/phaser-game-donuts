@@ -4,18 +4,10 @@ import TitleScene from './scenes/TitleScene';
 import TutorialScene from './scenes/TutorialScene';
 
 const titleScene = new TitleScene();
-// const tutorialScene = new TutorialScene();
+const tutorialScene = new TutorialScene();
 
 const config = {
-  // parent: "phaser-example",
-  // width: 800,
-  // height: 600,
-  // scale: {
-  //   parent: 'phaser-example',
-  //   mode: Phaser.Scale.FIT,
-  //   width: 800,
-  //   height: 600
-  // },
+  mode: Phaser.Scale.RESIZE,
   type: Phaser.AUTO,
   width: window.innerWidth,
   height: window.innerHeight,
@@ -33,7 +25,7 @@ const config = {
 const game = new Phaser.Game(config);
 game.scene.add('TitleScene', titleScene);
 game.scene.start('TitleScene');
-// game.scene.add('TutorialScene');
+game.scene.add('TutorialScene', tutorialScene);
 
 function preload() {
   this.load.image('score', Image.score);
