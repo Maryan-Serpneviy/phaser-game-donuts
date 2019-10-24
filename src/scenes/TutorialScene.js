@@ -27,17 +27,7 @@ export default class TutorialScene extends Phaser.Scene {
 
         const back = Util.createText(this, null, SCREEN_HEIGHT - 125, 'TITLE SCREEN', Const.FONT, 80);
         back.x = SCREEN_WIDTH / 2 - back.width / 2;
-        
-        gotoTitle(back, this);
-    }
-}
 
-function gotoTitle(elem, game) {
-    elem.setInteractive().on('pointerdown', function() {
-        this.setScale(1.05);
-    });
-    elem.setInteractive().on('pointerup', function() {
-        this.setScale(1);
-        game.scene.start('TitleScene');
-    });
+        Util.activate(back, Const.SCALE.COEF, 1, this, 'TitleScene');
+    }
 }

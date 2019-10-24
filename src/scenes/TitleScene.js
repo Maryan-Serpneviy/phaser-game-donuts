@@ -24,50 +24,27 @@ export default class TitleScene extends Phaser.Scene {
         bg.displayWidth = window.innerWidth;
         bg.displayHeight = window.innerHeight;
 
-        const logo = this.add.image(null, SCREEN_HEIGHT * Const.TITLE.LOGO_PAD_Y, 'logo')
-            .setOrigin(0, 0).setScale(Const.TITLE.SCALE.LOGO);
-        logo.x = SCREEN_WIDTH / 2 - logo.width * Const.TITLE.SCALE.LOGO / 2;
-        const logoOffsetY = logo.height * Const.TITLE.SCALE.LOGO + logo.y
+        const logo = this.add.image(null, SCREEN_HEIGHT * Const.LOGO_PAD_Y, 'logo')
+            .setOrigin(0, 0).setScale(Const.SCALE.LOGO);
+        logo.x = SCREEN_WIDTH / 2 - logo.width * Const.SCALE.LOGO / 2;
+        const logoOffsetY = logo.height * Const.SCALE.LOGO + logo.y
         
         const donutShadow = this.add.image(null, logoOffsetY + 20, 'big-shadow')
-            .setOrigin(0, 0).setScale(Const.TITLE.SCALE.DONUT);
-        donutShadow.x = SCREEN_WIDTH / 2 - donutShadow.width * Const.TITLE.SCALE.DONUT / 2;
+            .setOrigin(0, 0).setScale(Const.SCALE.DONUT);
+        donutShadow.x = SCREEN_WIDTH / 2 - donutShadow.width * Const.SCALE.DONUT / 2;
 
         this.add.image(donutShadow.x, donutShadow.y, 'donut')
-            .setOrigin(0, 0).setScale(Const.TITLE.SCALE.DONUT);
-        const play = this.add.image(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 350, 'btn-play').setScale(Const.TITLE.SCALE.PLAY);
-
-        Activate().activatePlayBtn(play);
+            .setOrigin(0, 0).setScale(Const.SCALE.DONUT);
+        const play = this.add.image(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 350, 'btn-play').setScale(Const.SCALE.PLAY);
         
         const sfx = this.add.image(SCREEN_WIDTH - 130, SCREEN_HEIGHT - 135, 'btn-sfx')
-            .setOrigin(0, 0).setScale(Const.TITLE.SCALE.SFX);
+            .setOrigin(0, 0).setScale(Const.SCALE.SFX);
 
         const tutorial = Util.createText(this, null, SCREEN_HEIGHT - 125, 'HOW TO PLAY', Const.FONT, '80px');
         tutorial.x = SCREEN_WIDTH / 2 - tutorial.width / 2;
 
-        Activate().gotoTutorial(tutorial, this);
-    }
-}
-
-export function Activate() {
-    return {
-        activatePlayBtn(btn) {
-            btn.setInteractive().on('pointerdown', function() {
-                this.setScale(Const.TITLE.SCALE.PLAY * 1.075);
-            });
-            btn.setInteractive().on('pointerup', function() {
-                console.log('start game');
-                this.setScale(Const.TITLE.SCALE.PLAY);
-            });
-        },
-        gotoTutorial(elem, game) {
-            elem.setInteractive().on('pointerdown', function() {
-                this.setScale(1.05);
-            });
-            elem.setInteractive().on('pointerup', function() {
-                this.setScale(1);
-                game.scene.start('TutorialScene');
-            });
-        }
+        Util.activate(play, Const.SCALE.PLAY * 1.075, Const.SCALE.PLAY, this, 'TutorialScene');
+        Util.activate(sfx, Const.SCALE.SFX * 1.075, Const.SCALE.SFX);
+        Util.activate(tutorial, 1.05, 1, this, 'TutorialScene');
     }
 }
