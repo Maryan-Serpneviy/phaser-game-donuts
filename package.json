@@ -1,4 +1,22 @@
 {
+  "google-fonts-plugin": {
+    "fonts": [
+      {
+        "family": "Fredoka One",
+          "variants": [],
+          "subsets": [
+            "latin-ext"
+        ]
+      }
+    ],
+    "formats": [
+      "ttf",
+      "woff",
+      "woff2",
+      "eot",
+      "svg"
+    ]
+  },
   "name": "phaser3-project-template",
   "version": "1.1.0",
   "description": "A Phaser 3 Project Template",
@@ -23,7 +41,10 @@
     "@babel/preset-env": "^7.2.3",
     "babel-loader": "^8.0.5",
     "clean-webpack-plugin": "^1.0.0",
+    "copy-webpack-plugin": "^5.0.4",
+    "css-loader": "^3.2.0",
     "file-loader": "^3.0.1",
+    "google-fonts-plugin": "^5.0.2",
     "google-fonts-webpack-plugin": "^0.4.4",
     "html-webpack-plugin": "^3.2.0",
     "raw-loader": "^1.0.0",

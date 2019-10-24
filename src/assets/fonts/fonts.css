@@ -1,0 +1,22 @@
+@import url("https://fonts.google.com/specimen/Fredoka+One?selection.family=Fredoka+One");
+
+@font-face {
+	font-family: 'Fredoka One';
+	src: url('./Fredoka-One/fredoka-one.ttf');
+}
+
+@font-face {
+	font-family: 'Fredoka One';
+	font-style: normal;
+	src: url('./Fredoka-One/fredoka-one.eot');
+	src: local('Fredoka One'), local('FredokaOne-Regular'),
+		url('./Fredoka-One/fredoka-one.eot?#iefix') format('embedded-opentype'),
+		url('./Fredoka-One/fredoka-one.woff2') format('woff2'),
+		url('./Fredoka-One/fredoka-one.woff') format('woff'),
+		url('./Fredoka-One/fredoka-one.ttf') format('truetype'),
+		url('./Fredoka-One/fredoka-one.svg#FredokaOne') format('svg');
+}
+@font-face: "Fredoka One" {
+	font-family: "Fredoka One";
+	src: url("./Fredoka-One/fredoka-one.ttf") format('truetype')
+}
