@@ -12,5 +12,9 @@ export default {
             this.setScale(scaleUp);
             game.scene.start(scene);
         });
+    },
+    getElemSize(mobScale, deskScale) {
+        const isMobile = window.innerHeight / window.innerWidth > 1;
+        return isMobile ? mobScale : deskScale;
     }
 }

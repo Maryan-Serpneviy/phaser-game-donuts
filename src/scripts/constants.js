@@ -1,7 +1,18 @@
 export default {
     LOGO_PAD_Y: 0.05,
     SCALE: {
-        LOGO: 1.45,
+        MOB: {
+            LOGO: 1.45,
+            DONUT: 1.1,
+            PLAY: 1.25,
+            SFX: 0.8
+        },
+        DESC: {
+            LOGO: 0.75,
+            DONUT: 0.65,
+            PLAY: 0.75,
+            SFX: 0.5
+        },
         SFX: 0.8,
     },
     COEF: {
@@ -10,9 +21,16 @@ export default {
         POINTER: 1.075
     },
     SIZE: {
-        GOTO: 70,
-        TITLE: 120,
-        CONTENT: 50
+        MOB: {
+            GOTO: 70,
+            TITLE: 120,
+            CONTENT: 50
+        },
+        DESC: {
+            GOTO: 50,
+            TITLE: 90,
+            CONTENT: 35
+        }
     },
     FONT: 'Fredoka One',
     TUT_CONTENT:
