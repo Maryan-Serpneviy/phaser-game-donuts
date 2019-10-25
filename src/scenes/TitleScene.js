@@ -35,7 +35,7 @@ export default class TitleScene extends Phaser.Scene {
         
         this.add.image(donutShadow.x, donutShadow.y, 'donut').setOrigin(0, 0).setScale(donutScale);
 
-        const play = this.add.image(window.innerWidth / 2, donutOffsetY + 20, 'btn-play');
+        const play = this.add.image(window.innerWidth / 2, donutOffsetY + 50, 'btn-play');
         const playScale = Util.getElemSize(Const.SCALE.MOB.PLAY, Const.SCALE.DESC.PLAY);
         play.setScale(playScale);
         const playOffsetY = (play.height * playScale + play.y);
@@ -44,7 +44,7 @@ export default class TitleScene extends Phaser.Scene {
         const tutorial = Util.createText(this, null, playOffsetY - 50, 'HOW TO PLAY', Const.FONT, tutorialSize);
         tutorial.x = window.innerWidth / 2 - tutorial.width / 2;
 
-        const sfx = this.add.image(window.innerWidth / 2 + play.width * playScale, donutOffsetY - 100, 'btn-sfx');
+        const sfx = this.add.image(window.innerWidth / 2 + play.width * playScale, donutOffsetY - 150, 'btn-sfx');
         const sfxScale = Util.getElemSize(Const.SCALE.MOB.SFX, Const.SCALE.DESC.SFX);
         sfx.setScale(sfxScale);
 
