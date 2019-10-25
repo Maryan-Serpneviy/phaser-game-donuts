@@ -19,6 +19,7 @@ export default class TitleScene extends Phaser.Scene {
     create() {
         const SCREEN_WIDTH = this.game.scale.gameSize._width;
         const SCREEN_HEIGHT = this.game.scale.gameSize._height;
+        let res = SCREEN_HEIGHT / SCREEN_WIDTH;
 
         const bg = this.add.image(0, 0, 'background').setOrigin(0, 0);
         bg.displayWidth = window.innerWidth;
@@ -29,22 +30,25 @@ export default class TitleScene extends Phaser.Scene {
         logo.x = SCREEN_WIDTH / 2 - logo.width * Const.SCALE.LOGO / 2;
         const logoOffsetY = logo.height * Const.SCALE.LOGO + logo.y
         
-        const donutShadow = this.add.image(null, logoOffsetY + 20, 'big-shadow')
-            .setOrigin(0, 0).setScale(Const.SCALE.DONUT);
-        donutShadow.x = SCREEN_WIDTH / 2 - donutShadow.width * Const.SCALE.DONUT / 2;
+        const donutShadow = this.add.image(null, logoOffsetY + 20, 'big-shadow').setOrigin(0, 0);
+        const donutScale = (SCREEN_HEIGHT - donutShadow.width) * Const.COEF.DONUT;
+        donutShadow.setScale(donutScale);
+        donutShadow.x = SCREEN_WIDTH / 2 - donutShadow.width * donutScale / 2;
+        
+        this.add.image(donutShadow.x, donutShadow.y, 'donut').setOrigin(0, 0).setScale(donutScale);
 
-        this.add.image(donutShadow.x, donutShadow.y, 'donut')
-            .setOrigin(0, 0).setScale(Const.SCALE.DONUT);
-        const play = this.add.image(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 350, 'btn-play').setScale(Const.SCALE.PLAY);
+        const play = this.add.image(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 350, 'btn-play');
+        const playScale = (SCREEN_HEIGHT - play.width) * Const.COEF.PLAY;
+        play.setScale(playScale);
         
         const sfx = this.add.image(SCREEN_WIDTH - 130, SCREEN_HEIGHT - 135, 'btn-sfx')
             .setOrigin(0, 0).setScale(Const.SCALE.SFX);
 
-        const tutorial = Util.createText(this, null, SCREEN_HEIGHT - 125, 'HOW TO PLAY', Const.FONT, '80px');
+        const tutorial = Util.createText(this, null, SCREEN_HEIGHT - 125, 'HOW TO PLAY', Const.FONT, Const.SIZE.GOTO);
         tutorial.x = SCREEN_WIDTH / 2 - tutorial.width / 2;
 
-        Util.activate(play, Const.SCALE.PLAY * 1.075, Const.SCALE.PLAY, this, 'TutorialScene');
-        Util.activate(sfx, Const.SCALE.SFX * 1.075, Const.SCALE.SFX);
-        Util.activate(tutorial, 1.05, 1, this, 'TutorialScene');
+        Util.activate(play, playScale * Const.COEF.POINTER, playScale, this, 'TutorialScene');
+        Util.activate(tutorial, Const.COEF.POINTER, 1, this, 'TutorialScene');
+        Util.activate(sfx, Const.SCALE.SFX * Const.COEF.POINTER, Const.SCALE.SFX);
     }
 }

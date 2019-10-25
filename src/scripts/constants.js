@@ -2,10 +2,17 @@ export default {
     LOGO_PAD_Y: 0.05,
     SCALE: {
         LOGO: 1.45,
-        DONUT: 1.25,
-        PLAY: 2,
         SFX: 0.8,
-        COEF: 1.075
+    },
+    COEF: {
+        DONUT: 0.001,
+        PLAY: 0.00125,
+        POINTER: 1.075
+    },
+    SIZE: {
+        GOTO: 70,
+        TITLE: 120,
+        CONTENT: 50
     },
     FONT: 'Fredoka One',
     TUT_CONTENT:

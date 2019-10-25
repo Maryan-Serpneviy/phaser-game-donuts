@@ -19,15 +19,15 @@ export default class TutorialScene extends Phaser.Scene {
         bg.displayWidth = window.innerWidth;
         bg.displayHeight = window.innerHeight;
 
-        const tutorial = Util.createText(this, null, 0, 'TUTORIAL', Const.FONT, 120);
+        const tutorial = Util.createText(this, null, 0, 'TUTORIAL', Const.FONT, Const.SIZE.TITLE);
         tutorial.x = SCREEN_WIDTH / 2 - tutorial.width / 2;
         
-        const tutText =  Util.createText(this, 0, null, Const.TUT_CONTENT, Const.FONT, 50)
+        const tutText =  Util.createText(this, 0, null, Const.TUT_CONTENT, Const.FONT, Const.SIZE.CONTENT)
         tutText.y = SCREEN_HEIGHT / 2 - tutText.height / 2;
 
-        const back = Util.createText(this, null, SCREEN_HEIGHT - 125, 'TITLE SCREEN', Const.FONT, 80);
+        const back = Util.createText(this, null, SCREEN_HEIGHT - 125, 'TITLE SCREEN', Const.FONT, Const.SIZE.GOTO);
         back.x = SCREEN_WIDTH / 2 - back.width / 2;
 
-        Util.activate(back, Const.SCALE.COEF, 1, this, 'TitleScene');
+        Util.activate(back, Const.COEF.POINTER, 1, this, 'TitleScene');
     }
 }
