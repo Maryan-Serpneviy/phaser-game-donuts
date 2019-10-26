@@ -8,6 +8,7 @@ export default class TutorialScene extends Phaser.Scene {
     }
 
     preload() {
+        this.load.image('hand', Image.hand);
         this.load.image('background', Image.background);
     }
 

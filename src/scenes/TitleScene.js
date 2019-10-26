@@ -8,6 +8,7 @@ export default class TitleScene extends Phaser.Scene {
     }
 
     preload() {
+        this.load.image('hand', Image.hand);
         this.load.image('background', Image.background);
         this.load.image('logo', Image.logo);
         this.load.image('btn-play', Image.btnPlay);
@@ -48,7 +49,7 @@ export default class TitleScene extends Phaser.Scene {
         const sfxScale = Util.getElemSize(Const.SCALE.MOB.SFX, Const.SCALE.DESC.SFX);
         sfx.setScale(sfxScale);
 
-        Util.activate(play, playScale * Const.COEF.POINTER, playScale, this, 'TutorialScene');
+        Util.activate(play, playScale * Const.COEF.POINTER, playScale, this, 'GameScene');
         Util.activate(tutorial, Const.COEF.POINTER, 1, this, 'TutorialScene');
         Util.activate(sfx, sfxScale * Const.COEF.POINTER, sfxScale);
     }

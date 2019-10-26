@@ -3,6 +3,7 @@ import logo from '../assets/images/donuts_logo.png';
 import btnPlay from '../assets/images/btn-play.png';
 import btnSfx from '../assets/images/btn-sfx.png';
 import score from '../assets/images/bg-score.png';
+import timer from '../assets/images/bg-timer.png';
 import bigShadow from '../assets/images/big-shadow.png';
 import donut from '../assets/images/donut.png';
 import timeUp from '../assets/images/text-timeup.png';
@@ -32,7 +33,7 @@ import particle4 from '../assets/images/particles/particle-4.png';
 import particle5 from '../assets/images/particles/particle-5.png';
 
 export default {
-    background, logo, btnPlay, btnSfx, score, bigShadow, donut, timeUp,
+    background, logo, btnPlay, btnSfx, score, timer, bigShadow, donut, timeUp,
     gem1, gem2, gem3, gem4, gem5, gem6, gem7, gem8, gem9, gem10, gem11, gem12,
     hand, shadow, particle_ex1, particle_ex2, particle_ex3,
     particle1, particle2, particle3, particle4, particle5

@@ -5,15 +5,17 @@ export default {
             LOGO: 1.45,
             DONUT: 1.1,
             PLAY: 1.25,
-            SFX: 0.8
+            SFX: 0.8,
+            SCORE: 1.25
         },
         DESC: {
             LOGO: 0.75,
             DONUT: 0.65,
             PLAY: 0.75,
-            SFX: 0.5
+            SFX: 0.5,
+            SCORE: 1
         },
-        SFX: 0.8,
+        SFX: 0.8
     },
     COEF: {
         DONUT: 0.001,
@@ -24,14 +26,20 @@ export default {
         MOB: {
             GOTO: 70,
             TITLE: 120,
-            CONTENT: 50
+            CONTENT: 50,
+            SCORE: 90
         },
         DESC: {
             GOTO: 50,
             TITLE: 90,
-            CONTENT: 35
+            CONTENT: 35,
+            SCORE: 70
         }
     },
+    COLOR: {
+        TIMER: '#bcf8f6'
+    },
+    TIMER_VAL: 90,
     FONT: 'Fredoka One',
     TUT_CONTENT:
     `
