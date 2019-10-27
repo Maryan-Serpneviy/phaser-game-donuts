@@ -23,7 +23,7 @@ export default function Timer(ctx, label, init) {
       },
 
       reducer() {
-          initTime --;
+          initTime--;
           label.setText(formatTime(initTime));
           if (initTime === 0) {
               ctx.timer.remove();

@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import Image from './scripts/images';
+
 import TitleScene from './scenes/TitleScene';
 import TutorialScene from './scenes/TutorialScene';
 import GameScene from './scenes/GameScene';
@@ -15,7 +15,7 @@ const config = {
   height: window.innerHeight,
   resolution: window.devicePixelRatio,
   physics: {
-    default: 'arcade',
+    default: 'arcade'
   },
   scene: {
     preload: preload,
@@ -32,13 +32,13 @@ game.scene.add('GamsScene', gameScene);
 game.scene.start('GameScene');
 
 function preload() {
-  
+
 }
 
 function create() {
-  
+
 }
 
 function update() {
-
+  
 }

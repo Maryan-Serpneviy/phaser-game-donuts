@@ -10,7 +10,25 @@
 			margin: 0;
 			font-family: 'Fredoka One', cursive;
 		}
+		body {
+			background-image: url('../src/assets/images/backgrounds/background-lg.jpg');
+			background-size: cover;
+		}
+		canvas {
+			display: flex;
+			margin: auto;
+		}
 	</style>
+	<script>
+		let wideScreen = null;
+		(function resizeForWideScreen() {
+			if (window.innerWidth / window.innerHeight > 1) {
+				wideScreen = true;
+				window.innerWidth = 980;
+				window.innerHeight = 1740;
+			}	
+		})();
+	</script>
 </head>
 <body>
 	

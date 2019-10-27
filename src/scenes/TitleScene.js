@@ -1,10 +1,10 @@
-import Image from '../scripts/images';
-import Const from '../scripts/constants';
-import Util from '../scripts/utils';
+import Const from '../utils/constants';
+import Util from '../utils/utils';
+import Image from '../utils/images';
 
 export default class TitleScene extends Phaser.Scene {
     constructor() {
-        super({key: 'TitleScene'});
+        super({ key: 'TitleScene' });
     }
 
     preload() {
@@ -18,39 +18,35 @@ export default class TitleScene extends Phaser.Scene {
     }
 
     create() {
+        Util.resizeIfWideScreen(this.game.canvas);
+
         const bg = this.add.image(0, 0, 'background').setOrigin(0, 0);
         bg.displayWidth = window.innerWidth;
         bg.displayHeight = window.innerHeight;
 
-        const logo = this.add.image(null, window.innerHeight * Const.LOGO_PAD_Y, 'logo').setOrigin(0, 0)
-        const logoScale = Util.getElemSize(Const.SCALE.MOB.LOGO, Const.SCALE.DESC.LOGO);
-        logo.setScale(logoScale);
-        logo.x = window.innerWidth / 2 - logo.width * logoScale / 2;
-        const logoOffsetY = logo.height * logoScale + logo.y;
-        
-        const donutShadow = this.add.image(null, logoOffsetY + 20, 'big-shadow').setOrigin(0, 0);
-        const donutScale = Util.getElemSize(Const.SCALE.MOB.DONUT, Const.SCALE.DESC.DONUT);
-        donutShadow.setScale(donutScale);
-        donutShadow.x = window.innerWidth / 2 - donutShadow.width * donutScale / 2;
-        const donutOffsetY = (donutShadow.height * donutScale + donutShadow.y) + logo.y;
-        
-        this.add.image(donutShadow.x, donutShadow.y, 'donut').setOrigin(0, 0).setScale(donutScale);
+        const logo = this.add.image(null, window.innerHeight * 0.05, 'logo')
+            .setOrigin(0, 0).setScale(Const.SCALE.LOGO);
+        logo.x = window.innerWidth / 2 - logo.width * Const.SCALE.LOGO / 2;
+        const logoOffsetY = logo.height * Const.SCALE.LOGO + logo.y;
 
-        const play = this.add.image(window.innerWidth / 2, donutOffsetY + 50, 'btn-play');
-        const playScale = Util.getElemSize(Const.SCALE.MOB.PLAY, Const.SCALE.DESC.PLAY);
-        play.setScale(playScale);
-        const playOffsetY = (play.height * playScale + play.y);
+        const donutShadow = this.add.image(null, logoOffsetY + 20, 'big-shadow')
+            .setOrigin(0, 0).setScale(Const.SCALE.DONUT);
+        donutShadow.x = window.innerWidth / 2 - donutShadow.width * Const.SCALE.DONUT / 2;
+        const donutOffsetY = donutShadow.height * Const.SCALE.DONUT + donutShadow.y + logo.y;
 
-        const tutorialSize = Util.getElemSize(Const.SIZE.MOB.GOTO, Const.SIZE.DESC.GOTO);
-        const tutorial = Util.createText(this, null, playOffsetY - 50, 'HOW TO PLAY', Const.FONT, tutorialSize);
+        this.add.image(donutShadow.x, donutShadow.y, 'donut').setOrigin(0, 0).setScale(Const.SCALE.DONUT);
+
+        const play = this.add.image(window.innerWidth / 2, donutOffsetY + 50, 'btn-play').setScale(Const.SCALE.PLAY);
+        const playOffsetY = play.height * Const.SCALE.PLAY + play.y;
+
+        const tutorial = Util.createText(this, null, playOffsetY - 50, 'HOW TO PLAY', Const.FONT, Const.SIZE.GOTO);
         tutorial.x = window.innerWidth / 2 - tutorial.width / 2;
 
-        const sfx = this.add.image(window.innerWidth / 2 + play.width * playScale, donutOffsetY - 150, 'btn-sfx');
-        const sfxScale = Util.getElemSize(Const.SCALE.MOB.SFX, Const.SCALE.DESC.SFX);
-        sfx.setScale(sfxScale);
+        const sfx = this.add.image(window.innerWidth / 2 + play.width * Const.SCALE.PLAY, donutOffsetY, 'btn-sfx');
+        sfx.setScale(Const.SCALE.SFX);
 
-        Util.activate(play, playScale * Const.COEF.POINTER, playScale, this, 'GameScene');
+        Util.activate(play, Const.SCALE.PLAY * Const.COEF.POINTER, Const.SCALE.PLAY, this, 'GameScene');
         Util.activate(tutorial, Const.COEF.POINTER, 1, this, 'TutorialScene');
-        Util.activate(sfx, sfxScale * Const.COEF.POINTER, sfxScale);
+        Util.activate(sfx, Const.SCALE.SFX * Const.COEF.POINTER, Const.SCALE.SFX);
     }
 }
