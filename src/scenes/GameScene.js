@@ -2,7 +2,8 @@ import Image from '../utils/images';
 import Const from '../utils/constants';
 import Util from '../utils/utils';
 import Timer from '../objects/Timer';
-import Grid from '../objects/Grid';
+import { Grid } from '../objects/Grid';
+import { MatchHandler } from '../objects/MatchHandler';
 
 export default class GameScene extends Phaser.Scene {
     constructor() {
@@ -48,13 +49,16 @@ export default class GameScene extends Phaser.Scene {
 
         Timer(this, this.timerLabel, Const.TIMER_VAL).initTimer();
 
-        this.board = new Grid(
-            Const.BOARD.ROWS,
-            Const.BOARD.COLS,
-            Const.BOARD.TYPES,
-            Const.BOARD.SIZE_X
-        );
+        // this.board = new Grid(
+        //     Const.BOARD.ROWS,
+        //     Const.BOARD.COLS,
+        //     Const.BOARD.TYPES,
+        //     Const.BOARD.SIZE_X
+        // );
 
-        this.board.createGrid(this);
+        // this.board.createGrid(this);
+        Grid.generateGrid.call(this);
+        console.log(this);
+        MatchHandler.handleMatches(this);
     }
 }
