@@ -20,6 +20,9 @@ export default class TitleScene extends Phaser.Scene {
     create() {
         Util.resizeIfWideScreen(this.game.canvas);
 
+        const handCursor = "url('../src/assets/images/game/hand.png'), pointer";
+        this.game.input.setDefaultCursor(handCursor);
+
         const bg = this.add.image(0, 0, 'background').setOrigin(0, 0);
         bg.displayWidth = window.innerWidth;
         bg.displayHeight = window.innerHeight;
