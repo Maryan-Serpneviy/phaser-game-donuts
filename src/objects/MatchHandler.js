@@ -1,4 +1,3 @@
-import Const from '../utils/constants';
 import { Grid } from '../objects/Grid';
 
 export const MatchHandler = {
@@ -45,9 +44,6 @@ export const MatchHandler = {
             for (let r = 0; r < grid.length; r++) {
                 for (let c = 0; c < grid[r].length; c++) {
                     if (grid[r][c] === matched[m]) {
-                        // console.log(grid[r][c]);
-                        // console.log(c);
-                        // grid[r].splice(c, 1);
                         this.replaceCell(grid[r][c]);
                     }
                 }
@@ -56,13 +52,7 @@ export const MatchHandler = {
     },
 
     replaceCell(match) {
-        
-        // let x = Const.BOARD.PAD_X + c * this.size;
-        // let y = Const.BOARD.PAD_Y + r * this.size;
-        console.log(match);
-        //match.type = Math.ceil(Math.random() * Const.BOARD.TYPES);
         match.image.destroy();
-
-        
+        Grid.renderCell(match.coords[0], match.coords[1], this.game, 'replaced');
     }
 };

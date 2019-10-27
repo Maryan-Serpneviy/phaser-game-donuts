@@ -25,8 +25,6 @@ export const Grid = {
         gem.alpha = 0.25;
         thisArg.grid[r][c] = {
             type: randomType,
-            id: this.id,
-            toBeRemoved: false,
             image: gem, // add reference to spicific gem for replacing if match
             coords: [r, c] // coords for replace
         };
