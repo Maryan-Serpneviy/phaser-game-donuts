@@ -6,11 +6,9 @@ export const MatchHandler = {
     game: null,
     grid: null,
     handleMatches(game) {
-        // MatchHandler.game = this.game;
-        // MatchHandler.grid = this.grid;
         this.game = game;
         this.grid = game.grid;
-        
+
         this.findRowsMatches();
         this.findColsMatches();
         this.replaceMatchedCells();

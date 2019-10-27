@@ -34,7 +34,7 @@ export default {
         CONTENT: 50,
         SCORE: 90
     },
-    TIMER_VAL: 90,
+    TIMER_INIT: 90,
     FONT: 'Fredoka One',
     TUT_CONTENT:
     `
