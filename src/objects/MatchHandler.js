@@ -4,6 +4,7 @@ export const MatchHandler = {
     cellsToReplace: [],
     game: null,
     grid: null,
+
     handleMatches(game) {
         this.game = game;
         this.grid = game.grid;
