@@ -42,9 +42,9 @@ export default class GameScene extends Phaser.Scene {
         const timerBox = this.add.image(null, 0, 'timer').setOrigin(0, 0).setScale(Const.SCALE.SCORE);
         timerBox.x = window.innerWidth / 2 - 75;
 
-        this.scoreLabel = Util.createText(this, null, 75, '0', Const.FONT, Const.SIZE.SCORE);
+        this.scoreLabel = Util.createText(this, null, 70, '0', Const.FONT, Const.SIZE.SCORE);
         this.scoreLabel.x = window.innerWidth / 2 - scoreBox.width / 2;
-        this.timerLabel = Util.createText(this, null, 75, Timer.formatTime(Const.TIMER_INIT), Const.FONT, Const.SIZE.SCORE);
+        this.timerLabel = Util.createText(this, null, 70, Timer.formatTime(Const.TIMER_INIT), Const.FONT, Const.SIZE.SCORE);
         this.timerLabel.x = window.innerWidth / 2 + 132;
 
         Timer.initTimer.call(this, this.timerLabel);
