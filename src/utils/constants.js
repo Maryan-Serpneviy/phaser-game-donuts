@@ -26,7 +26,8 @@ export default {
     COEF: {
         DONUT: 0.001,
         PLAY: 0.00125,
-        POINTER: 1.075
+        POINTER: 1.075,
+        GEM_ACTIVE: 1.25
     },
     SIZE: {
         GOTO: 70,

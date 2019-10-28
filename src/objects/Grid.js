@@ -26,7 +26,8 @@ export const Grid = {
         thisArg.grid[r][c] = {
             type: randomType,
             image: gem, // add reference to spicific gem for replacing if match
-            coords: [r, c] // coords for replace
+            coords: [r, c], // coords for replace
+            matchingCells: [] // will hold reference to cell that make match
         };
     }
 };

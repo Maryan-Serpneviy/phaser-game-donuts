@@ -50,7 +50,7 @@ export default class GameScene extends Phaser.Scene {
         Timer.initTimer.call(this, this.timerLabel);
         Grid.generateGrid.call(this);
         MatchHandler.handleMatches(this);
+
         MatchFinder.findMatches(this);
-        // check (get) valid moves
     }
 }

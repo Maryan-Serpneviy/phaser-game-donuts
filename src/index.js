@@ -16,11 +16,6 @@ const config = {
   resolution: window.devicePixelRatio,
   physics: {
     default: 'arcade'
-  },
-  scene: {
-    preload: preload,
-    create: create,
-    update: update
   }
 };
 
@@ -30,15 +25,3 @@ game.scene.add('TitleScene', titleScene);
 game.scene.add('TutorialScene', tutorialScene);
 game.scene.add('GamsScene', gameScene);
 game.scene.start('GameScene');
-
-function preload() {
-
-}
-
-function create() {
-
-}
-
-function update() {
-  
-}
