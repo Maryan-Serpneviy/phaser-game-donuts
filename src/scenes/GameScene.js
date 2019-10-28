@@ -4,6 +4,7 @@ import Util from '../utils/utils';
 import { Timer } from '../objects/Timer';
 import { Grid } from '../objects/Grid';
 import { MatchHandler } from '../objects/MatchHandler';
+import { MatchFinder } from '../objects/MatchFinder';
 
 export default class GameScene extends Phaser.Scene {
     constructor() {
@@ -49,6 +50,7 @@ export default class GameScene extends Phaser.Scene {
         Timer.initTimer.call(this, this.timerLabel);
         Grid.generateGrid.call(this);
         MatchHandler.handleMatches(this);
+        MatchFinder.findMatches(this);
         // check (get) valid moves
     }
 }

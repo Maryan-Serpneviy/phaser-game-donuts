@@ -8,12 +8,12 @@ export const MatchHandler = {
         this.game = game;
         this.grid = game.grid;
 
-        this.findRowsMatches();
-        this.findColsMatches();
-        this.replaceMatchedCells();
+        this._findRowsMatches();
+        this._findColsMatches();
+        this._replaceMatchedCells();
     },
 
-    findRowsMatches() {
+    _findRowsMatches() {
         const grid = this.grid;
         for (let r = 0; r < grid.length; r++) {
             for (let c = 1; c < grid[r].length - 1; c++) {
@@ -25,7 +25,7 @@ export const MatchHandler = {
         }
     },
 
-    findColsMatches() {
+    _findColsMatches() {
         const grid = this.grid;
         for (let r = 1; r < grid.length - 1; r++) {
             for (let c = 0; c < grid[r].length; c++) {
@@ -37,21 +37,21 @@ export const MatchHandler = {
         }
     },
 
-    replaceMatchedCells() {
+    _replaceMatchedCells() {
         const grid = this.grid;
         const matched = this.cellsToReplace;
         for (let m = 0; m < matched.length; m++) {
             for (let r = 0; r < grid.length; r++) {
                 for (let c = 0; c < grid[r].length; c++) {
                     if (grid[r][c] === matched[m]) {
-                        this.replaceCell(grid[r][c]);
+                        this._replaceCell(grid[r][c]);
                     }
                 }
             }
         }
     },
 
-    replaceCell(match) {
+    _replaceCell(match) {
         match.image.destroy();
         Grid.renderCell(match.coords[0], match.coords[1], this.game, 'replaced');
     }
