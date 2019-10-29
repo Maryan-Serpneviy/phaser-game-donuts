@@ -17,8 +17,8 @@ export const GridGenerator = {
     },
 
     _renderCell(r, c) {
-        let x = Const.BOARD.PAD_X + c * Const.BOARD.SIZE_X;
-        let y = Const.BOARD.PAD_Y + r * Const.BOARD.SIZE_X;
+        const x = Const.BOARD.PAD_X + c * Const.BOARD.SIZE_X;
+        const y = Const.BOARD.PAD_Y + r * Const.BOARD.SIZE_X;
         const randomType = Math.ceil(Math.random() * Const.BOARD.TYPES);
         const gem = this.game.add.image(x, y, `gem-${randomType}`).setScale(Const.SCALE.GEM);
         this.game.tweens.add({
@@ -31,9 +31,17 @@ export const GridGenerator = {
         this.grid[r][c] = {
             type: randomType,
             image: gem, // add reference to spicific gem for replacing if match
-            coords: [r, c], // coords for replace
+            // gridCoords: [r, c], // coords for replace
+            gridCoords: { r, c },
+            x: x,
+            y: y,
             matchingCells: [] // will hold reference to cell that make match
         };
+        this.grid[r][c].image.setInteractive().on('pointerdown', setSelected);
+
+        function setSelected() {
+            this.scene.selected = this;
+        }
     },
 
     matchRow(r, c) {

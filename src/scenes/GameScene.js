@@ -51,6 +51,59 @@ export default class GameScene extends Phaser.Scene {
 
         Timer.initTimer.call(this, this.timerLabel);
         GridGenerator.generateGrid(this);
-        MatchFinder.findMatches(this);
+
+        this.matchingCells = [];
+        this.prev = null;
+
+        this.input.on('pointerdown', this.donutPicker, this);
+    }
+
+    donutPicker() {
+        // if selected isn't part of match - clear
+        if (this.prev) {
+            this.prev.setScale(Const.SCALE.GEM);
+        }
+        // get selected coords
+        const donutCoords = this.getDonutGridCoords(this.selected.x, this.selected.y);
+        if (this.matchingCells.length) {
+            const matches = [...new Set(this.matchingCells)];
+            for (let m = 0; m < matches.length; m++) {
+                if (this.selected.x === matches[m].x && this.selected.y === matches[m].y) {
+                    console.log('swap')
+                }
+            }
+            // if selected isn't part of match clear matches
+            this.matchingCells = [];
+            console.log('clear');
+        }
+        // get matching cells
+        MatchFinder.isMakingMatch.call(this, donutCoords.r, donutCoords.c);
+
+        // cache previous select
+        this.prev = this.selected;
+        // scale if makes match
+        if (this.matchingCells.length) {
+            this.selected.setScale(Const.SCALE.GEM * Const.COEF.GEM_ACTIVE);
+        }
+    }
+
+    getDonutGridCoords(x, y) {
+        for (let r = 0; r < this.grid.length; r++) {
+            for (let c = 0; c < this.grid[r].length; c++) {
+                if (this.grid[r][c].x === x && this.grid[r][c].y === y) {
+                    return this.grid[r][c].gridCoords;
+                }
+            }
+        }
+    }
+
+    getSelected(x, y) {
+        for (let r = 0; r < this.grid.length; r++) {
+            for (let c = 0; c < this.grid[r].length; c++) {
+                if (this.grid[r][c].x === x && this.grid[r][c].y === y) {
+                    return this.grid[r][c];
+                }
+            }
+        }
     }
 }
