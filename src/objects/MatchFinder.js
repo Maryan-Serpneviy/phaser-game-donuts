@@ -15,7 +15,7 @@ export const MatchFinder = {
                 this.isMakingColMatch(r, c);
             }
         }
-        this.doNext();
+        // this.doNext();
     },
 
     isOnGrid(r, c) {
@@ -31,12 +31,12 @@ export const MatchFinder = {
     isMakingRowMatch(r, c) {
         if (this.isOnGrid(r, c) === this.isOnGrid(r, c - 2) && // following left
             this.isOnGrid(r, c) === this.isOnGrid(r, c - 3)) { // following left
-                this.setSwappable(this.board[r][c], this.board[r][c - 1]);
+                this.markForSwap(this.board[r][c], this.board[r][c - 1]);
         }
 
         if (this.isOnGrid(r, c) === this.isOnGrid(r, c + 2) && // following right
             this.isOnGrid(r, c) === this.isOnGrid(r, c + 3)) { // following right
-                this.setSwappable(this.board[r][c], this.board[r][c + 1]);
+                this.markForSwap(this.board[r][c], this.board[r][c + 1]);
         }
 
         if (this.isOnGrid(r, c) === this.isOnGrid(r - 1, c - 1) && // in between top left
@@ -45,7 +45,7 @@ export const MatchFinder = {
             this.isOnGrid(r, c) === this.isOnGrid(r - 1, c - 2) || // following top left
             this.isOnGrid(r, c) === this.isOnGrid(r - 1, c + 1) && // following top right
             this.isOnGrid(r, c) === this.isOnGrid(r - 1, c + 2)) { // following top right
-                this.setSwappable(this.board[r][c], this.board[r - 1][c]);
+                this.markForSwap(this.board[r][c], this.board[r - 1][c]);
         }
 
         if (
@@ -55,19 +55,19 @@ export const MatchFinder = {
             this.isOnGrid(r, c) === this.isOnGrid(r + 1, c - 2) || // following bot left
             this.isOnGrid(r, c) === this.isOnGrid(r + 1, c + 1) && // following bot right
             this.isOnGrid(r, c) === this.isOnGrid(r + 1, c + 2)) { // following bot right
-                this.setSwappable(this.board[r][c], this.board[r + 1][c]);
+                this.markForSwap(this.board[r][c], this.board[r + 1][c]);
         }
     },
 
     isMakingColMatch(r, c) {
         if (this.isOnGrid(r, c) === this.isOnGrid(r + 2, c) && // following bottom
             this.isOnGrid(r, c) === this.isOnGrid(r + 3, c)) { // following bottom
-                this.setSwappable(this.board[r][c], this.board[r + 1][c]);
+                this.markForSwap(this.board[r][c], this.board[r + 1][c]);
         }
 
         if (this.isOnGrid(r, c) === this.isOnGrid(r - 2, c) && // following top
             this.isOnGrid(r, c) === this.isOnGrid(r - 3, c)) { // following top
-                this.setSwappable(this.board[r][c], this.board[r - 1][c]);
+                this.markForSwap(this.board[r][c], this.board[r - 1][c]);
         }
 
         if (this.isOnGrid(r, c) === this.isOnGrid(r - 1, c - 1) && // in between left top
@@ -76,7 +76,7 @@ export const MatchFinder = {
             this.isOnGrid(r, c) === this.isOnGrid(r + 2, c - 1) || // following bot left
             this.isOnGrid(r, c) === this.isOnGrid(r + 1, c - 1) && // following left top
             this.isOnGrid(r, c) === this.isOnGrid(r + 2, c - 1)) { // following left top
-                this.setSwappable(this.board[r][c], this.board[r][c - 1]);
+                this.markForSwap(this.board[r][c], this.board[r][c - 1]);
         }
 
         if (this.isOnGrid(r, c) === this.isOnGrid(r - 1, c + 1) && // in between right top
@@ -85,19 +85,25 @@ export const MatchFinder = {
             this.isOnGrid(r, c) === this.isOnGrid(r + 2, c + 1) || // following bot right
             this.isOnGrid(r, c) === this.isOnGrid(r + 1, c + 1) && // following right top
             this.isOnGrid(r, c) === this.isOnGrid(r + 2, c + 1)) { // following right top
-                this.setSwappable(this.board[r][c], this.board[r][c + 1]);
+                this.markForSwap(this.board[r][c], this.board[r][c + 1]);
         }
 
 
     },
 
-    setSwappable(target, matchCell) {
-        // console.log(target, matchCell);
+    markForSwap(target, matchCell) {
+        console.log(target, matchCell);
         target.swappable = true;
         target.matchingCells.push(matchCell);
 
         this.matchables.push(target);
         this.matchCoords.push(matchCell.coords);
+
+
+        target.image.setInteractive().on('pointerdown', function() {
+            this.setScale(2.4);
+            this.active = true;
+        });
     },
 
     doNext() {
@@ -116,11 +122,24 @@ export const MatchFinder = {
         //         }
         //     });
         // }
-        for (const matchable of this.matchables) {
-            // console.log(matchable.image);
-            matchable.image.setInteractive().on('pointerdown', function() {
+        // for (const matchable of this.matchables) {
+        //     // console.log(matchable.image);
+        //     matchable.image.setInteractive().on('pointerdown', function() {
+        //         this.setScale(2.4);
+        //     });
+        //     console.log(matchable);
+        // }
+        for (let i = 0; i < this.matchables.length; i++) {
+            this.matchables[i].image.setInteractive().on('pointerdown', function() {
                 this.setScale(2.4);
             });
+            this.matchables[i].active = true;
+            for (let j = 0; j < this.matchables[i].matchingCells.length; j++) {
+                this.matchables[i].matchingCells[j].image.setInteractive().on('pointerdown', function() {
+                    this.setScale(2.4);
+                });
+                this.matchables[i].active = true;
+            }
         }
     }
 };

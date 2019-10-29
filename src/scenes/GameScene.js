@@ -2,8 +2,7 @@ import Image from '../utils/images';
 import Const from '../utils/constants';
 import Util from '../utils/utils';
 import { Timer } from '../objects/Timer';
-import { Grid } from '../objects/Grid';
-import { MatchHandler } from '../objects/MatchHandler';
+import { GridGenerator } from '../objects/GridGenerator';
 import { MatchFinder } from '../objects/MatchFinder';
 
 export default class GameScene extends Phaser.Scene {
@@ -33,6 +32,9 @@ export default class GameScene extends Phaser.Scene {
     create() {
         Util.resizeIfWideScreen(this.game.canvas);
 
+        const handCursor = "url('../src/assets/images/game/hand.png'), pointer";
+        this.game.input.setDefaultCursor(handCursor);
+
         const bg = this.add.image(0, 0, 'background').setOrigin(0, 0);
         bg.displayWidth = window.innerWidth;
         bg.displayHeight = window.innerHeight;
@@ -48,9 +50,7 @@ export default class GameScene extends Phaser.Scene {
         this.timerLabel.x = window.innerWidth / 2 + 132;
 
         Timer.initTimer.call(this, this.timerLabel);
-        Grid.generateGrid.call(this);
-        MatchHandler.handleMatches(this);
-
+        GridGenerator.generateGrid(this);
         MatchFinder.findMatches(this);
     }
 }

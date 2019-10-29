@@ -42,7 +42,7 @@ export default class TitleScene extends Phaser.Scene {
         const play = this.add.image(window.innerWidth / 2, donutOffsetY + 50, 'btn-play').setScale(Const.SCALE.PLAY);
         const playOffsetY = play.height * Const.SCALE.PLAY + play.y;
 
-        const tutorial = Util.createText(this, null, playOffsetY - 50, 'HOW TO PLAY', Const.FONT, Const.SIZE.GOTO);
+        const tutorial = Util.createText(this, null, playOffsetY - 50, 'HOW TO PLAY', 'Fredoka One', Const.SIZE.GOTO);
         tutorial.x = window.innerWidth / 2 - tutorial.width / 2;
 
         const sfx = this.add.image(window.innerWidth / 2 + play.width * Const.SCALE.PLAY, donutOffsetY, 'btn-sfx');
