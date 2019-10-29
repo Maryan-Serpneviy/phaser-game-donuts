@@ -15,7 +15,6 @@ export const MatchFinder = {
                 this.isMakingColMatch(r, c);
             }
         }
-        // this.doNext();
     },
 
     isOnGrid(r, c) {
