@@ -59,28 +59,30 @@ export default class GameScene extends Phaser.Scene {
     }
 
     donutPicker() {
-        let prevCoords;
+        this.prevCoords = null;
         // if selected isn't part of match - deselect
         if (this.prev) {
-            prevCoords = this.getDonutGridCoords(this.prev.x, this.prev.y);
+            this.prevCoords = this.getDonutGridCoords(this.prev.x, this.prev.y);
             this.prev.setScale(Const.SCALE.GEM);
         }
         // get selected coords
-        const currentCoords = this.getDonutGridCoords(this.selected.x, this.selected.y);
+        this.currentCoords = this.getDonutGridCoords(this.selected.x, this.selected.y);
 
         if (this.matchingCells.length) {
             const matches = [...new Set(this.matchingCells)];
             for (let m = 0; m < matches.length; m++) {
                 if (this.selected.x === matches[m].x && this.selected.y === matches[m].y) {
-                    this.swapGridCells(prevCoords.r, prevCoords.c, currentCoords.r, currentCoords.c);
-                    this.swapDonuts(this.prev, this.selected);
+                    this.swapGridCells(this.prevCoords.r, this.prevCoords.c, this.currentCoords.r, this.currentCoords.c);
+                    this.tweeenSwap(this.prev, this.selected);
+                    this.tweeenSwap(this.selected, this.prev);
+                    // destroyMatches
                 }
             }
             // clear matches
             this.matchingCells = [];
         }
         // get matching cells
-        MatchFinder.isMakingMatch.call(this, currentCoords.r, currentCoords.c);
+        MatchFinder.isMakingMatch.call(this, this.currentCoords.r, this.currentCoords.c);
 
         // cache previous select
         this.prev = this.selected;
@@ -107,12 +109,38 @@ export default class GameScene extends Phaser.Scene {
     }
 
     swapDonuts(d1, d2) {
-        const [cacheX, cacheY] = [d1.x, d1.y];
-        d1.x = d2.x;
-        d1.y = d2.y;
-        d2.x = cacheX;
-        d2.y = cacheY;
+        // const [cacheX, cacheY] = [d1.x, d1.y];
+        // d1.x = d2.x;
+        // d1.y = d2.y;
+        // d2.x = cacheX;
+        // d2.y = cacheY;
+        // this.tweeenSwap(d1, d2);
+        // this.tweeenSwap(d2, d1); 
     }
+
+    tweeenSwap(d1, d2) {
+        this.tweens.add({
+            targets: d2,
+            x: d1.x,
+            y: d1.y,
+            duration: 200,
+            callbackScope: this
+        });
+    }
+
+    // tweeenSwap(donuts) {
+    //     // disappear tween
+    //     donuts.forEach(
+    //         function(donut) {
+    //             this.tweens.add({
+    //                 targets: donut,
+    //                 alpha: 0.25,
+    //                 duration: 1000,
+    //                 callbackScope: this
+    //             });
+    //         }.bind(this)
+    //     );
+    // }
 
     getSelected(x, y) {
         for (let r = 0; r < this.grid.length; r++) {
