@@ -5,7 +5,6 @@ export const MatchFinder = {
     grid: null,
 
     isMakingMatch(row, col) {
-        // this.matchingCells = [];
         MatchFinder.game = this;
         MatchFinder.grid = this.grid;
 

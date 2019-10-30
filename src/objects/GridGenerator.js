@@ -1,6 +1,7 @@
 import Const from '../utils/constants';
 
 export const GridGenerator = {
+    matchMakers: [],
     generateGrid(game) {
         game.grid = [];
         this.game = game;
@@ -10,10 +11,14 @@ export const GridGenerator = {
             this.grid.push(new Array(Const.BOARD.COLS));
             for (let c = 0; c < Const.BOARD.COLS; c++) {
                 while (this.matchRow(r, c) || this.matchCol(r, c)) {
+                    if (this.grid[r][c]) {
+                        this.matchMakers.push(this.grid[r][c]);
+                    }
                     this._renderCell(r, c);
                 }
             }
         }
+        this._destroyMatches();
     },
 
     _renderCell(r, c) {
@@ -31,11 +36,9 @@ export const GridGenerator = {
         this.grid[r][c] = {
             type: randomType,
             image: gem, // add reference to spicific gem for replacing if match
-            // gridCoords: [r, c], // coords for replace
-            gridCoords: { r, c },
+            gridCoords: { r, c }, // coords for replace
             x: x,
-            y: y,
-            matchingCells: [] // will hold reference to cell that make match
+            y: y
         };
         this.grid[r][c].image.setInteractive().on('pointerdown', setSelected);
 
@@ -76,5 +79,11 @@ export const GridGenerator = {
             return this.grid[r][c].type;
         }
         return false;
+    },
+
+    _destroyMatches() {
+        for (let i = 0; i < this.matchMakers.length; i++) {
+            this.matchMakers[i].image.destroy();
+        }
     }
 };
