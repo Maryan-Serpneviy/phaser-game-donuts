@@ -3,6 +3,7 @@ import Const from '../utils/constants';
 export const MatchFinder = {
     game: null,
     grid: null,
+    matchesFound: [],
 
     isMakingMatch(row, col) {
         MatchFinder.game = this;
@@ -10,86 +11,107 @@ export const MatchFinder = {
 
         for (let r = 0; r < this.grid.length; r++) {
             for (let c = 0; c < this.grid[r].length; c++) {
-                MatchFinder.isMakingRowMatch(row, col);
-                MatchFinder.isMakingColMatch(row, col);
+                MatchFinder._isMakingRowMatch(row, col);
+                MatchFinder._isMakingColMatch(row, col);
             }
         }
     },
 
-    isOnGrid(r, c) {
+    matchesAvailable(grid) {
+        this.grid = grid;
+        for (let r = 0; r < grid.length; r++) {
+            for (let c = 0; c < grid[r].length; c++) {
+                this._isMakingRowMatch(r, c, 'just checking');
+                this._isMakingColMatch(r, c, 'just checking');
+            }
+        }
+        if (this.matchesFound.length) {
+            return true;
+        }
+        return false;
+    },
+
+    _isOnGrid(r, c) {
         if (r >= 0 && r < Const.BOARD.ROWS &&
             c >= 0 && c < Const.BOARD.COLS &&
             this.grid[r] !== undefined &&
-            this.grid[r][c] !== undefined) {
+            this.grid[r][c] !== undefined
+            ) {
             return this.grid[r][c].type;
         }
         return false;
     },
 
-    isMakingRowMatch(r, c) {
-        if (this.isOnGrid(r, c) === this.isOnGrid(r, c - 2) && // following left
-            this.isOnGrid(r, c) === this.isOnGrid(r, c - 3)) { // following left
-                this.markForSwap(this.grid[r][c], this.grid[r][c - 1]);
+    _isMakingRowMatch(r, c, check) {
+        if (this._isOnGrid(r, c) === this._isOnGrid(r, c - 2) && // following left
+            this._isOnGrid(r, c) === this._isOnGrid(r, c - 3)) { // following left
+                this._getPossibleMatches(this.grid[r][c], this.grid[r][c - 1], check);
         }
 
-        if (this.isOnGrid(r, c) === this.isOnGrid(r, c + 2) && // following right
-            this.isOnGrid(r, c) === this.isOnGrid(r, c + 3)) { // following right
-                this.markForSwap(this.grid[r][c], this.grid[r][c + 1]);
+        if (this._isOnGrid(r, c) === this._isOnGrid(r, c + 2) && // following right
+            this._isOnGrid(r, c) === this._isOnGrid(r, c + 3)) { // following right
+                this._getPossibleMatches(this.grid[r][c], this.grid[r][c + 1], check);
         }
 
-        if (this.isOnGrid(r, c) === this.isOnGrid(r - 1, c - 1) && // in between top left
-            this.isOnGrid(r, c) === this.isOnGrid(r - 1, c + 1) || // in between top left
-            this.isOnGrid(r, c) === this.isOnGrid(r - 1, c - 1) && // following top left
-            this.isOnGrid(r, c) === this.isOnGrid(r - 1, c - 2) || // following top left
-            this.isOnGrid(r, c) === this.isOnGrid(r - 1, c + 1) && // following top right
-            this.isOnGrid(r, c) === this.isOnGrid(r - 1, c + 2)) { // following top right
-                this.markForSwap(this.grid[r][c], this.grid[r - 1][c]);
+        if (this._isOnGrid(r, c) === this._isOnGrid(r - 1, c - 1) && // in between top left
+            this._isOnGrid(r, c) === this._isOnGrid(r - 1, c + 1) || // in between top left
+            this._isOnGrid(r, c) === this._isOnGrid(r - 1, c - 1) && // following top left
+            this._isOnGrid(r, c) === this._isOnGrid(r - 1, c - 2) || // following top left
+            this._isOnGrid(r, c) === this._isOnGrid(r - 1, c + 1) && // following top right
+            this._isOnGrid(r, c) === this._isOnGrid(r - 1, c + 2)) { // following top right
+                this._getPossibleMatches(this.grid[r][c], this.grid[r - 1][c], check);
         }
 
         if (
-            this.isOnGrid(r, c) === this.isOnGrid(r + 1, c - 1) && // in between bot left
-            this.isOnGrid(r, c) === this.isOnGrid(r + 1, c + 1) || // in between bot right
-            this.isOnGrid(r, c) === this.isOnGrid(r + 1, c - 1) && // following bot left
-            this.isOnGrid(r, c) === this.isOnGrid(r + 1, c - 2) || // following bot left
-            this.isOnGrid(r, c) === this.isOnGrid(r + 1, c + 1) && // following bot right
-            this.isOnGrid(r, c) === this.isOnGrid(r + 1, c + 2)) { // following bot right
-                this.markForSwap(this.grid[r][c], this.grid[r + 1][c]);
+            this._isOnGrid(r, c) === this._isOnGrid(r + 1, c - 1) && // in between bot left
+            this._isOnGrid(r, c) === this._isOnGrid(r + 1, c + 1) || // in between bot right
+            this._isOnGrid(r, c) === this._isOnGrid(r + 1, c - 1) && // following bot left
+            this._isOnGrid(r, c) === this._isOnGrid(r + 1, c - 2) || // following bot left
+            this._isOnGrid(r, c) === this._isOnGrid(r + 1, c + 1) && // following bot right
+            this._isOnGrid(r, c) === this._isOnGrid(r + 1, c + 2)) { // following bot right
+                this._getPossibleMatches(this.grid[r][c], this.grid[r + 1][c], check);
         }
         return false;
     },
 
-    isMakingColMatch(r, c) {
-        if (this.isOnGrid(r, c) === this.isOnGrid(r + 2, c) && // following bottom
-            this.isOnGrid(r, c) === this.isOnGrid(r + 3, c)) { // following bottom
-                this.markForSwap(this.grid[r][c], this.grid[r + 1][c]);
+    _isMakingColMatch(r, c, check) {
+        if (this._isOnGrid(r, c) === this._isOnGrid(r + 2, c) && // following bottom
+            this._isOnGrid(r, c) === this._isOnGrid(r + 3, c)) { // following bottom
+                this._getPossibleMatches(this.grid[r][c], this.grid[r + 1][c], check);
         }
 
-        if (this.isOnGrid(r, c) === this.isOnGrid(r - 2, c) && // following top
-            this.isOnGrid(r, c) === this.isOnGrid(r - 3, c)) { // following top
-                this.markForSwap(this.grid[r][c], this.grid[r - 1][c]);
+        if (this._isOnGrid(r, c) === this._isOnGrid(r - 2, c) && // following top
+            this._isOnGrid(r, c) === this._isOnGrid(r - 3, c)) { // following top
+                this._getPossibleMatches(this.grid[r][c], this.grid[r - 1][c], check);
         }
 
-        if (this.isOnGrid(r, c) === this.isOnGrid(r - 1, c - 1) && // in between left top
-            this.isOnGrid(r, c) === this.isOnGrid(r + 1, c - 1) || // in between left bot
-            this.isOnGrid(r, c) === this.isOnGrid(r + 1, c - 1) && // following bot left
-            this.isOnGrid(r, c) === this.isOnGrid(r + 2, c - 1) || // following bot left
-            this.isOnGrid(r, c) === this.isOnGrid(r - 1, c - 1) && // following left top
-            this.isOnGrid(r, c) === this.isOnGrid(r - 2, c - 1)) { // following left top
-                this.markForSwap(this.grid[r][c], this.grid[r][c - 1]);
+        if (this._isOnGrid(r, c) === this._isOnGrid(r - 1, c - 1) && // in between left top
+            this._isOnGrid(r, c) === this._isOnGrid(r + 1, c - 1) || // in between left bot
+            this._isOnGrid(r, c) === this._isOnGrid(r + 1, c - 1) && // following bot left
+            this._isOnGrid(r, c) === this._isOnGrid(r + 2, c - 1) || // following bot left
+            this._isOnGrid(r, c) === this._isOnGrid(r - 1, c - 1) && // following left top
+            this._isOnGrid(r, c) === this._isOnGrid(r - 2, c - 1)) { // following left top
+                this._getPossibleMatches(this.grid[r][c], this.grid[r][c - 1], check);
         }
 
-        if (this.isOnGrid(r, c) === this.isOnGrid(r - 1, c + 1) && // in between right top
-            this.isOnGrid(r, c) === this.isOnGrid(r + 1, c + 1) || // in between right bot
-            this.isOnGrid(r, c) === this.isOnGrid(r + 1, c + 1) && // following bot right
-            this.isOnGrid(r, c) === this.isOnGrid(r + 2, c + 1) || // following bot right
-            this.isOnGrid(r, c) === this.isOnGrid(r - 1, c + 1) && // following right top
-            this.isOnGrid(r, c) === this.isOnGrid(r - 2, c + 1)) { // following right top
-                this.markForSwap(this.grid[r][c], this.grid[r][c + 1]);
+        if (this._isOnGrid(r, c) === this._isOnGrid(r - 1, c + 1) && // in between right top
+            this._isOnGrid(r, c) === this._isOnGrid(r + 1, c + 1) || // in between right bot
+            this._isOnGrid(r, c) === this._isOnGrid(r + 1, c + 1) && // following bot right
+            this._isOnGrid(r, c) === this._isOnGrid(r + 2, c + 1) || // following bot right
+            this._isOnGrid(r, c) === this._isOnGrid(r - 1, c + 1) && // following right top
+            this._isOnGrid(r, c) === this._isOnGrid(r - 2, c + 1)) { // following right top
+                this._getPossibleMatches(this.grid[r][c], this.grid[r][c + 1], check);
         }
         return false;
     },
 
-    markForSwap(target, matchCell) {
-        this.game.matchingCells.push(matchCell);
+    _getPossibleMatches(target, matchCell, check) {
+        if (!check) {
+            this.game.matchingCells.push(matchCell);
+        }
+        if (this.matchesFound.includes(matchCell)) {
+            return;
+        }
+        this.matchesFound.push(matchCell);
     }
 };

@@ -51,8 +51,13 @@ export default class GameScene extends Phaser.Scene {
 
         Timer.initTimer.call(this, this.timerLabel);
         GridGenerator.generateGrid(this);
+        // if no possible matches on grid do rerender
+        while(!MatchFinder.matchesAvailable(this.grid)) {
+            GridGenerator.generateGrid(this);
+        }
 
         this.matchingCells = [];
+
         this.prev = null;
 
         this.input.on('pointerdown', this.donutPicker, this);
@@ -108,22 +113,14 @@ export default class GameScene extends Phaser.Scene {
         this.grid[r2][c2] = Object.assign(cache);
     }
 
-    swapDonuts(d1, d2) {
-        // const [cacheX, cacheY] = [d1.x, d1.y];
-        // d1.x = d2.x;
-        // d1.y = d2.y;
-        // d2.x = cacheX;
-        // d2.y = cacheY;
-        // this.tweeenSwap(d1, d2);
-        // this.tweeenSwap(d2, d1); 
-    }
-
     tweeenSwap(d1, d2) {
         this.tweens.add({
             targets: d2,
             x: d1.x,
             y: d1.y,
-            duration: 200,
+            duration: 400,
+            ease: 'Elastic',
+            rotation: 40,
             callbackScope: this
         });
     }
