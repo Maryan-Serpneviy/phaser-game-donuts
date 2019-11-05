@@ -1,9 +1,10 @@
 import Image from '../utils/images';
 import Const from '../utils/constants';
 import Util from '../utils/utils';
+import Tween from '../utils/tweens';
 import { Timer } from '../objects/Timer';
-import { GridGenerator } from '../objects/GridGenerator';
-import { MatchFinder } from '../objects/MatchFinder';
+import { Grid } from '../objects/Grid';
+import { Match } from '../objects/Match';
 
 export default class GameScene extends Phaser.Scene {
     constructor() {
@@ -50,11 +51,8 @@ export default class GameScene extends Phaser.Scene {
         this.timerLabel.x = window.innerWidth / 2 + 132;
 
         Timer.initTimer.call(this, this.timerLabel);
-        GridGenerator.generateGrid(this);
-        // if no possible matches on grid do rerender
-        while(!MatchFinder.matchesAvailable(this.grid)) {
-            GridGenerator.generateGrid(this);
-        }
+        Grid.renderGrid(this);
+        Match.rerenderIfNoPossibleMatches(this);
 
         this.matchingCells = [];
 
@@ -76,18 +74,20 @@ export default class GameScene extends Phaser.Scene {
         if (this.matchingCells.length) {
             const matches = [...new Set(this.matchingCells)];
             for (let m = 0; m < matches.length; m++) {
+                // if match
                 if (this.selected.x === matches[m].x && this.selected.y === matches[m].y) {
+                    Match.isMakingMatch.call(this, this.currentCoords.r, this.currentCoords.c);
                     this.swapGridCells(this.prevCoords.r, this.prevCoords.c, this.currentCoords.r, this.currentCoords.c);
-                    this.tweeenSwap(this.prev, this.selected);
-                    this.tweeenSwap(this.selected, this.prev);
-                    // destroyMatches
+                    Grid.destroy(this);
+                    //Grid.descendCells(this);
+                    
                 }
             }
             // clear matches
             this.matchingCells = [];
         }
         // get matching cells
-        MatchFinder.isMakingMatch.call(this, this.currentCoords.r, this.currentCoords.c);
+        Match.isMakingMatch.call(this, this.currentCoords.r, this.currentCoords.c);
 
         // cache previous select
         this.prev = this.selected;
@@ -101,51 +101,24 @@ export default class GameScene extends Phaser.Scene {
         for (let r = 0; r < this.grid.length; r++) {
             for (let c = 0; c < this.grid[r].length; c++) {
                 if (this.grid[r][c].x === x && this.grid[r][c].y === y) {
-                    return this.grid[r][c].gridCoords;
+                    return { r: r, c: c };
                 }
             }
         }
     }
 
     swapGridCells(r1, c1, r2, c2) {
-        const cache = Object.assign(this.grid[r1][c1]);
-        this.grid[r1][c1] = Object.assign(this.grid[r2][c2]);
-        this.grid[r2][c2] = Object.assign(cache);
-    }
+        const cacheType = this.grid[r1][c1].type;
+        this.grid[r1][c1].type = this.grid[r2][c2].type;
+        this.grid[r2][c2].type = cacheType;
 
-    tweeenSwap(d1, d2) {
-        this.tweens.add({
-            targets: d2,
-            x: d1.x,
-            y: d1.y,
-            duration: 400,
-            ease: 'Elastic',
-            rotation: 40,
-            callbackScope: this
-        });
-    }
-
-    // tweeenSwap(donuts) {
-    //     // disappear tween
-    //     donuts.forEach(
-    //         function(donut) {
-    //             this.tweens.add({
-    //                 targets: donut,
-    //                 alpha: 0.25,
-    //                 duration: 1000,
-    //                 callbackScope: this
-    //             });
-    //         }.bind(this)
-    //     );
-    // }
-
-    getSelected(x, y) {
-        for (let r = 0; r < this.grid.length; r++) {
-            for (let c = 0; c < this.grid[r].length; c++) {
-                if (this.grid[r][c].x === x && this.grid[r][c].y === y) {
-                    return this.grid[r][c];
-                }
-            }
-        }
+        const cacheImg = this.grid[r1][c1].image;
+        this.grid[r1][c1].image = this.grid[r2][c2].image;
+        this.grid[r2][c2].image = cacheImg;
+        // const cache = Object.assign(this.grid[r1][c1]);
+        // this.grid[r1][c1] = Object.assign(this.grid[r2][c2]);
+        // this.grid[r2][c2] = Object.assign(cache);
+        Tween.tweeenSwap.call(this, this.prev, this.selected);
+        Tween.tweeenSwap.call(this, this.selected, this.prev);
     }
 }

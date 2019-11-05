@@ -7,18 +7,18 @@ export default {
         SFX: 0.8,
         GEM: 2
     },
-    BOARD: {
-        ROWS: 6,
+    GRID: {
+        ROWS: 8,
         COLS: 5,
         TYPES: 6,
         SIZE_X: 190,
-        SIZE_Y: 100,
+        SIZE_Y: 190,
         PAD_X: 110,
         PAD_Y: 320
     },
     GAME: {
-        GEMH: 100,
-        GEMW: 100,
+        GEMH: 190,
+        GEMW: 190,
         SWAP: 200,
         FALL: 100,
         DESTROY: 200
