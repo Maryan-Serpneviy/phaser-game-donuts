@@ -8,7 +8,7 @@ export default {
         GEM: 2
     },
     GRID: {
-        ROWS: 7,
+        ROWS: 6,
         COLS: 5,
         TYPES: 6,
         OFFSET_X: 110,
