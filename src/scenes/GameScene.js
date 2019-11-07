@@ -1,10 +1,10 @@
 import Image from '../utils/images';
 import Const from '../utils/constants';
 import Util from '../utils/utils';
-import Tween from '../utils/tweens';
 import { Timer } from '../objects/Timer';
 import { Grid } from '../objects/Grid';
 import { Match } from '../objects/Match';
+import { Swapper } from '../objects/Swapper';
 
 export default class GameScene extends Phaser.Scene {
     constructor() {
@@ -50,75 +50,19 @@ export default class GameScene extends Phaser.Scene {
         this.timerLabel = Util.createText(this, null, 70, Timer.formatTime(Const.TIMER_INIT), Const.FONT, Const.SIZE.SCORE);
         this.timerLabel.x = window.innerWidth / 2 + 132;
 
+        this.restart = Util.createText(this, 300, window.innerHeight - 150, 'RESTART', Const.FONT, Const.SIZE.SCORE);
+        this.restart.setInteractive().on('pointerdown', () => {
+            this.scene.restart();
+        });
+
         Timer.initTimer.call(this, this.timerLabel);
         Grid.renderGrid(this);
-        Match.rerenderIfNoPossibleMatches(this);
+        Match.renderNewGridIfNoMatches(this);
 
         this.matchingCells = [];
 
         this.prev = null;
 
-        this.input.on('pointerdown', this.donutPicker, this);
-    }
-
-    donutPicker() {
-        this.prevCoords = null;
-        // if selected isn't part of match - deselect
-        if (this.prev) {
-            this.prevCoords = this.getDonutGridCoords(this.prev.x, this.prev.y);
-            this.prev.setScale(Const.SCALE.GEM);
-        }
-        // get selected coords
-        this.currentCoords = this.getDonutGridCoords(this.selected.x, this.selected.y);
-
-        if (this.matchingCells.length) {
-            const matches = [...new Set(this.matchingCells)];
-            for (let m = 0; m < matches.length; m++) {
-                // if match
-                if (this.selected.x === matches[m].x && this.selected.y === matches[m].y) {
-                    Match.isMakingMatch.call(this, this.currentCoords.r, this.currentCoords.c);
-                    this.swapGridCells(this.prevCoords.r, this.prevCoords.c, this.currentCoords.r, this.currentCoords.c);
-                    Grid.destroy(this);
-                    //Grid.descendCells(this);
-                    
-                }
-            }
-            // clear matches
-            this.matchingCells = [];
-        }
-        // get matching cells
-        Match.isMakingMatch.call(this, this.currentCoords.r, this.currentCoords.c);
-
-        // cache previous select
-        this.prev = this.selected;
-        // scale if makes match
-        if (this.matchingCells.length) {
-            this.selected.setScale(Const.SCALE.GEM * Const.COEF.GEM_ACTIVE);
-        }
-    }
-
-    getDonutGridCoords(x, y) {
-        for (let r = 0; r < this.grid.length; r++) {
-            for (let c = 0; c < this.grid[r].length; c++) {
-                if (this.grid[r][c].x === x && this.grid[r][c].y === y) {
-                    return { r: r, c: c };
-                }
-            }
-        }
-    }
-
-    swapGridCells(r1, c1, r2, c2) {
-        const cacheType = this.grid[r1][c1].type;
-        this.grid[r1][c1].type = this.grid[r2][c2].type;
-        this.grid[r2][c2].type = cacheType;
-
-        const cacheImg = this.grid[r1][c1].image;
-        this.grid[r1][c1].image = this.grid[r2][c2].image;
-        this.grid[r2][c2].image = cacheImg;
-        // const cache = Object.assign(this.grid[r1][c1]);
-        // this.grid[r1][c1] = Object.assign(this.grid[r2][c2]);
-        // this.grid[r2][c2] = Object.assign(cache);
-        Tween.tweeenSwap.call(this, this.prev, this.selected);
-        Tween.tweeenSwap.call(this, this.selected, this.prev);
+        this.input.on('pointerdown', Swapper.inputHandler, this);
     }
 }

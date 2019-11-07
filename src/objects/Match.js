@@ -18,7 +18,7 @@ export const Match = {
         }
     },
 
-    rerenderIfNoPossibleMatches(game) {
+    renderNewGridIfNoMatches(game) {
         this.grid = game.grid;
         for (let r = 0; r < this.grid.length; r++) {
             for (let c = 0; c < this.grid[r].length; c++) {
@@ -27,17 +27,18 @@ export const Match = {
             }
         }
         if (!this.matchesFound.length) {
-            this._destroyGrid(this.grid, game);
+            this._destroyGrid();
+            Grid.renderGrid(game);
+            this.renderNewGridIfNoMatches(game);
         }
     },
 
-    _destroyGrid(grid, game) {
-        for (let r = 0; r < grid.length; r++) {
-            for (let c = 0; c < grid[r].length; c++) {
-                grid[r][c].image.destroy();
+    _destroyGrid() {
+        for (let r = 0; r < this.grid.length; r++) {
+            for (let c = 0; c < this.grid[r].length; c++) {
+                this.grid[r][c].image.destroy();
             }
         }
-        Grid.renderGrid(game);
     },
 
     _isOnGrid(r, c) {
@@ -124,9 +125,7 @@ export const Match = {
         if (!check) {
             this.game.matchingCells.push(matchCell);
         }
-        if (this.matchesFound.includes(matchCell)) {
-            return;
-        }
+
         this.matchesFound.push(matchCell);
         return true;
     }

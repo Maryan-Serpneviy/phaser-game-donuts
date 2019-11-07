@@ -3,9 +3,9 @@
     "fonts": [
       {
         "family": "Fredoka One",
-          "variants": [],
-          "subsets": [
-            "latin-ext"
+        "variants": [],
+        "subsets": [
+          "latin-ext"
         ]
       }
     ],
@@ -38,8 +38,10 @@
   "homepage": "https://github.com/photonstorm/phaser3-project-template#readme",
   "devDependencies": {
     "@babel/core": "^7.2.2",
+    "@babel/plugin-transform-runtime": "^7.6.2",
     "@babel/preset-env": "^7.2.3",
     "babel-loader": "^8.0.5",
+    "babel-polyfill": "^6.26.0",
     "clean-webpack-plugin": "^1.0.0",
     "copy-webpack-plugin": "^5.0.4",
     "css-loader": "^3.2.0",
@@ -56,5 +58,15 @@
   },
   "dependencies": {
     "phaser": "^3.16.2"
+  },
+  "babel": {
+    "plugins": [
+      [
+        "@babel/plugin-transform-runtime",
+        {
+          "regenerator": true
+        }
+      ]
+    ]
   }
 }

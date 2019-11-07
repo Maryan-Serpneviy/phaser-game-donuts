@@ -8,13 +8,11 @@ export default {
         GEM: 2
     },
     GRID: {
-        ROWS: 8,
+        ROWS: 7,
         COLS: 5,
         TYPES: 6,
-        SIZE_X: 190,
-        SIZE_Y: 190,
-        PAD_X: 110,
-        PAD_Y: 320
+        OFFSET_X: 110,
+        OFFSET_Y: 320
     },
     GAME: {
         GEMH: 190,

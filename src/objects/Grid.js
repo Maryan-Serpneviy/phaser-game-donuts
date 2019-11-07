@@ -16,14 +16,13 @@ export const Grid = {
                     if (this.grid[r][c]) {
                         this.matchMakers.push(this.grid[r][c]);
                     }
-                    const x = Const.GRID.PAD_X + c * Const.GAME.GEMW;
-                    const y = Const.GRID.PAD_Y + r * Const.GAME.GEMH;
+                    const x = Const.GRID.OFFSET_X + c * Const.GAME.GEMW;
+                    const y = Const.GRID.OFFSET_Y + r * Const.GAME.GEMH;
                     this._renderCell(r, c, x, y);
                 }
             }
         }
         this._destroyMatches();
-        console.log('rendering new grid...')
     },
 
     _renderCell(r, c, x, y) {
@@ -32,6 +31,7 @@ export const Grid = {
         this.grid[r][c] = {
             type: randomType,
             image: gem,
+            destroyed: false,
             x: x,
             y: y,
             coords: { r: r, c: c }
@@ -84,43 +84,41 @@ export const Grid = {
         }
     },
 
-    destroy(game = this) {
-        this.grid = game.grid;
-        this.cols = Const.GRID.COLS;
+    destroy() {
         const matchMakers = [];
 
         for (let r = 0; r < this.grid.length; r++) {
             for (let c = 0; c < this.grid[r].length; c++) {
-                if (this._matchRow(r, c) || this._matchCol(r, c)) {
+                if (Grid._matchRow(r, c) || Grid._matchCol(r, c)) {
                     this.grid[r][c].destroyed = true;
                     matchMakers.push(this.grid[r][c]);
-                    this.game.tweens.add({
+                    this.tweens.add({
                         targets: this.grid[r][c].image,
                         alpha: 0.5,
                         // x: this.grid[r][c].image.setScale(2),
                         // y: this.grid[r][c].image.setScale(0),
                         duration: 300,
                         ease: 'Elastic',
-                        callbackScope: game,
+                        callbackScope: this,
                         onComplete: () => {
                             this.grid[r][c].image.destroy();
                             matchMakers.shift(this.grid[r][c]);
                             if (!matchMakers.length) {
-                                this._descendImages();
+                                Grid._descendImages();
                             }
                         }
                     });
                 }
             }
         }
-        this._calculateDestroyedPerCol();
+        Grid._calculateDestroyedPerCol();
     },
 
     _calculateDestroyedPerCol() {
         this.destroyedPerCol.fill(0, 0, Const.GRID.COLS);
         for (let r = 0; r < this.grid.length; r++) {
             for (let c = 0; c < this.grid[r].length; c++) {
-                if (this.grid[r][c].destroyed) {
+                if (this.grid[r][c].destroyed === true) {
                     this.destroyedPerCol[c]++;
                 }
             }
@@ -132,7 +130,7 @@ export const Grid = {
             for (let r = 0; r < Const.GRID.ROWS - 1; r++) {
                 if (this.destroyedPerCol[c] > 0) {
                     // destroyed at the top of column ? break : shift
-                    if (this.grid[r][c].destroyed) {
+                    if (this.grid[r][c].destroyed === true) {
                         break;
                     }
                     this.game.tweens.add({
@@ -143,7 +141,7 @@ export const Grid = {
                         rotation: 40,
                         callbackScope: this.game
                     });
-                    if (this.grid[r + 1][c].destroyed) {
+                    if (this.grid[r + 1][c].destroyed === true) {
                         break;
                     }
                 }
@@ -155,14 +153,23 @@ export const Grid = {
     _searchDestroyed() {
         for (let c = 0; c < Const.GRID.COLS; c++) {
             for (let r = Const.GRID.ROWS - 1; r >= 0; r--) {
-                if (this.grid[r][c].destroyed &&
+                if (this.grid[r][c].destroyed === true &&
                     this.destroyedPerCol[c] > 0 &&
                     r - this.destroyedPerCol[c] >= 0) {
                         this._swapGridCells(r, c, r - this.destroyedPerCol[c], c);
                 }
             }
         }
-        this._replenishGrid();
+        for (let r = 0; r < this.grid.length; r++) {
+            for (let c = 0; c < this.grid[r].length; c++) {
+                if (this.grid[r][c].destroyed === true) {
+                    this.grid[r][c].destroyed = false;
+                    this.grid[r][c].type = 0;
+                }
+            }
+        }
+        //this.destroy.call(this.game);
+        // this._replenishGrid();
     },
 
     _swapGridCells(r1, c1, r2, c2) {
@@ -182,15 +189,10 @@ export const Grid = {
     _replenishGrid() {
         for (let r = 0; r < this.grid.length; r++) {
             for (let c = 0; c < this.grid[r].length; c++) {
-                if (this.grid[r][c].destroyed) {
+                if (this.grid[r][c].destroyed === true) {
                     this.grid[r][c].destroyed = false;
                     this._renderCell(r, c, this.grid[r][c].image.x, this.grid[r][c].image.y)
                 }
-            }
-        }
-        for (let r = 0; r < this.grid.length; r++) {
-            for (let c = 0; c < this.grid[r].length; c++) {
-                console.log(this.grid[r][c]);
             }
         }
     }
