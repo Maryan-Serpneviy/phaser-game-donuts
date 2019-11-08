@@ -21,7 +21,7 @@ const config = {
 
 const game = new Phaser.Game(config);
 game.scene.add('TitleScene', titleScene);
-game.scene.start('TitleScene');
+//game.scene.start('TitleScene');
 game.scene.add('TutorialScene', tutorialScene);
 game.scene.add('GamsScene', gameScene);
-//game.scene.start('GameScene');
+game.scene.start('GameScene');

@@ -1,4 +1,5 @@
 import Const from '../utils/constants';
+import Tween from '../utils/tweens';
 
 export const Grid = {
     matchMakers: [],
@@ -31,11 +32,13 @@ export const Grid = {
         this.grid[r][c] = {
             type: randomType,
             image: gem,
-            destroyed: false,
             x: x,
             y: y,
             coords: { r: r, c: c }
         };
+        gem.scaleX = 0;
+        gem.scaleY = 0;
+        Tween.render.call(this.game, this.grid[r][c]);
         this.grid[r][c].image.setInteractive().on('pointerdown', setSelected);
 
         function setSelected() {
@@ -94,16 +97,16 @@ export const Grid = {
                     matchMakers.push(this.grid[r][c]);
                     this.tweens.add({
                         targets: this.grid[r][c].image,
-                        alpha: 0.5,
-                        // x: this.grid[r][c].image.setScale(2),
-                        // y: this.grid[r][c].image.setScale(0),
-                        duration: 300,
-                        ease: 'Elastic',
+                        scaleX: 0,
+                        scaleY: 0,
+                        duration: 200,
+                        ease: 'Linear',
                         callbackScope: this,
                         onComplete: () => {
                             this.grid[r][c].image.destroy();
                             matchMakers.shift(this.grid[r][c]);
                             if (!matchMakers.length) {
+                                Grid._calculateDestroyedPerCol();
                                 Grid._descendImages();
                             }
                         }
@@ -111,14 +114,14 @@ export const Grid = {
                 }
             }
         }
-        Grid._calculateDestroyedPerCol();
+        //Grid._calculateDestroyedPerCol();
     },
 
     _calculateDestroyedPerCol() {
         this.destroyedPerCol.fill(0, 0, Const.GRID.COLS);
         for (let r = 0; r < this.grid.length; r++) {
             for (let c = 0; c < this.grid[r].length; c++) {
-                if (this.grid[r][c].destroyed === true) {
+                if (this.grid[r][c].destroyed) {
                     this.destroyedPerCol[c]++;
                 }
             }
@@ -130,70 +133,56 @@ export const Grid = {
             for (let r = 0; r < Const.GRID.ROWS - 1; r++) {
                 if (this.destroyedPerCol[c] > 0) {
                     // destroyed at the top of column ? break : shift
-                    if (this.grid[r][c].destroyed === true) {
+                    if (this.grid[r][c].destroyed) {
                         break;
                     }
-                    this.game.tweens.add({
-                        targets: this.grid[r][c].image,
-                        y: this.grid[r][c].image.y + Const.GAME.GEMH * this.destroyedPerCol[c],
-                        duration: 400,
-                        ease: 'Elastic',
-                        rotation: 40,
-                        callbackScope: this.game
-                    });
-                    if (this.grid[r + 1][c].destroyed === true) {
+                    Tween.descend.call(this.game, this.grid[r][c], this.destroyedPerCol[c]);
+                    if (this.grid[r + 1][c].destroyed) {
                         break;
                     }
                 }
             }
         }
-        this._searchDestroyed();
+        Grid._searchDestroyed();
     },
 
     _searchDestroyed() {
         for (let c = 0; c < Const.GRID.COLS; c++) {
             for (let r = Const.GRID.ROWS - 1; r >= 0; r--) {
-                if (this.grid[r][c].destroyed === true &&
+                if (this.grid[r][c].destroyed &&
                     this.destroyedPerCol[c] > 0 &&
                     r - this.destroyedPerCol[c] >= 0) {
                         this._swapGridCells(r, c, r - this.destroyedPerCol[c], c);
                 }
             }
         }
-        for (let r = 0; r < this.grid.length; r++) {
-            for (let c = 0; c < this.grid[r].length; c++) {
-                if (this.grid[r][c].destroyed === true) {
-                    this.grid[r][c].destroyed = false;
-                    this.grid[r][c].type = 0;
-                }
-            }
-        }
-        //this.destroy.call(this.game);
-        // this._replenishGrid();
+        // this.destroy.call(this.game);
+        this._replenishGrid();
     },
 
     _swapGridCells(r1, c1, r2, c2) {
         //console.log(`fir r: ${r1}, c:${c1}, dest r: ${r2}, c: ${c2}`);
-        
         const cacheType = this.grid[r1][c1].type;
         this.grid[r1][c1].type = this.grid[r2][c2].type;
         this.grid[r2][c2].type = cacheType;
         this.grid[r1][c1].destroyed = false;
         this.grid[r2][c2].destroyed = true;
-
-        // const cache = Object.assign(this.grid[r1][c1]);
-        // this.grid[r1][c1] = Object.assign(this.grid[r2][c2]);
-        // this.grid[r2][c2] = Object.assign(cache);
     },
 
     _replenishGrid() {
         for (let r = 0; r < this.grid.length; r++) {
             for (let c = 0; c < this.grid[r].length; c++) {
-                if (this.grid[r][c].destroyed === true) {
+                if (this.grid[r][c].destroyed) {
                     this.grid[r][c].destroyed = false;
-                    this._renderCell(r, c, this.grid[r][c].image.x, this.grid[r][c].image.y)
+                    this._renderCell(r, c, this.grid[r][c].image.x, this.grid[r][c].image.y);
                 }
             }
         }
+        for (let r = 0; r < this.grid.length; r++) {
+            for (let c = 0; c < this.grid[r].length; c++) {
+                //console.log(this.grid[r][c].destroyed)
+            }
+        }
+        this.destroy.call(this.game);
     }
 };
