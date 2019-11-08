@@ -88,33 +88,36 @@ export const Grid = {
     },
 
     destroy() {
-        const matchMakers = [];
+        let matchMakers = 0;
 
         for (let r = 0; r < this.grid.length; r++) {
             for (let c = 0; c < this.grid[r].length; c++) {
                 if (Grid._matchRow(r, c) || Grid._matchCol(r, c)) {
                     this.grid[r][c].destroyed = true;
-                    matchMakers.push(this.grid[r][c]);
+                    matchMakers++;
+                    //matchMakers.push(this.grid[r][c]);
                     this.tweens.add({
                         targets: this.grid[r][c].image,
                         scaleX: 0,
                         scaleY: 0,
-                        duration: 200,
+                        duration: 400,
                         ease: 'Linear',
                         callbackScope: this,
                         onComplete: () => {
                             this.grid[r][c].image.destroy();
-                            matchMakers.shift(this.grid[r][c]);
-                            if (!matchMakers.length) {
-                                Grid._calculateDestroyedPerCol();
-                                Grid._descendImages();
-                            }
+                            //matchMakers.shift(this.grid[r][c]);
+                            matchMakers--;
+                            //if (matchMakers === 0) {
+                                //Grid._calculateDestroyedPerCol();
+                                //Grid._descendImages();
+                                Grid._replenishGrid();
+                            //}
                         }
                     });
                 }
             }
         }
-        //Grid._calculateDestroyedPerCol();
+        Grid._calculateDestroyedPerCol();
     },
 
     _calculateDestroyedPerCol() {
@@ -136,14 +139,15 @@ export const Grid = {
                     if (this.grid[r][c].destroyed) {
                         break;
                     }
-                    Tween.descend.call(this.game, this.grid[r][c], this.destroyedPerCol[c]);
+                    //Tween.descend.call(this.game, this.grid[r][c], this.destroyedPerCol[c]);
                     if (this.grid[r + 1][c].destroyed) {
                         break;
                     }
                 }
             }
         }
-        Grid._searchDestroyed();
+        //Grid._searchDestroyed();
+        //Grid._replenishGrid();
     },
 
     _searchDestroyed() {
@@ -157,7 +161,7 @@ export const Grid = {
             }
         }
         // this.destroy.call(this.game);
-        this._replenishGrid();
+        //this._replenishGrid();
     },
 
     _swapGridCells(r1, c1, r2, c2) {
@@ -170,17 +174,22 @@ export const Grid = {
     },
 
     _replenishGrid() {
+        console.log('replenish')
         for (let r = 0; r < this.grid.length; r++) {
             for (let c = 0; c < this.grid[r].length; c++) {
                 if (this.grid[r][c].destroyed) {
-                    this.grid[r][c].destroyed = false;
                     this._renderCell(r, c, this.grid[r][c].image.x, this.grid[r][c].image.y);
                 }
             }
         }
         for (let r = 0; r < this.grid.length; r++) {
             for (let c = 0; c < this.grid[r].length; c++) {
-                //console.log(this.grid[r][c].destroyed)
+                // if (this.grid[r][c].destroyed) {
+                    //this.grid[r][c].destroyed = false;
+                    //console.log(this.grid[r][c].destroyed, r, c)
+                //}
+                //console.log(this.grid[r][c])
+                
             }
         }
         this.destroy.call(this.game);
