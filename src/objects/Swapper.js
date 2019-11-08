@@ -1,6 +1,7 @@
 import Const from '../utils/constants';
 import Tween from '../utils/tweens';
 import { Match } from './Match';
+import { Grid } from './Grid';
 
 export const Swapper = {
     inputHandler() {
@@ -21,19 +22,8 @@ export const Swapper = {
             // if second pick is on the same line
             const isOnSameLine = Swapper._checkMoveValidity.call(this);
             if (isOnSameLine) {
-                const matches = [...new Set(this.matchingCells)];
-                // if move is making match
-                let isInvalid = true;
-                for (let i = 0; i < matches.length; i++) {
-                    if (this.currCoords.r === matches[i].coords.r && this.currCoords.c === matches[i].coords.c) {
-                        isInvalid = false;
-                        break;
-                    }
-                }
-                // deselect gem
-                this.selected.setScale(Const.SCALE.GEM);
-
-                isInvalid ? Swapper._swapHandler.call(this, false) : Swapper._swapHandler.call(this, true);
+                const isValid = Swapper._checkForMatch.call(this);
+                isValid ? Swapper._swapHandler.call(this, true) : Swapper._swapHandler.call(this, false);
             }
         }
         // cache previous select
@@ -60,26 +50,40 @@ export const Swapper = {
         return false;
     },
 
+    _checkForMatch() {
+        // swapping gem type
+        const cacheType = this.grid[this.prevCoords.r][this.prevCoords.c].type;
+        this.grid[this.prevCoords.r][this.prevCoords.c].type = this.grid[this.currCoords.r][this.currCoords.c].type;
+        this.grid[this.currCoords.r][this.currCoords.c].type = cacheType;
+
+        return Grid._matchRow(this.currCoords.r, this.currCoords.c) ||
+               Grid._matchCol(this.currCoords.r, this.currCoords.c) ||
+               Grid._matchRow(this.prevCoords.r, this.prevCoords.c) ||
+               Grid._matchCol(this.prevCoords.r, this.prevCoords.c);
+    },
+
     _swapHandler(isValid) {
         if (isValid) {
-            // swapping gem type
-            const cacheType = this.grid[this.prevCoords.r][this.prevCoords.c].type;
-            this.grid[this.prevCoords.r][this.prevCoords.c].type = this.grid[this.currCoords.r][this.currCoords.c].type;
-            this.grid[this.currCoords.r][this.currCoords.c].type = cacheType;
             // swapping image reference
             const cacheImg = this.grid[this.prevCoords.r][this.prevCoords.c].image;
             this.grid[this.prevCoords.r][this.prevCoords.c].image = this.grid[this.currCoords.r][this.currCoords.c].image;
             this.grid[this.currCoords.r][this.currCoords.c].image = cacheImg;
 
             Tween.swap.valid.call(this, this.prev, this.selected);
-            Tween.swap.valid.call(this, this.selected, this.prev);
+            Tween.swap.valid.call(this, this.selected, this.prev, Grid.destroy);
         } else {
+            // swapping back gem type
+            const cacheType = this.grid[this.currCoords.r][this.currCoords.c].type;
+            this.grid[this.currCoords.r][this.currCoords.c].type = this.grid[this.prevCoords.r][this.prevCoords.c].type;
+            this.grid[this.prevCoords.r][this.prevCoords.c].type = cacheType;
+
             Tween.swap.invalid.call(this, this.prev, this.selected);
             Tween.swap.invalid.call(this, this.selected, this.prev);
         }
+        // deselect gem
+        this.selected.setScale(Const.SCALE.GEM);
         // reset cache data after swap
         this.prev = null;
         this.selected = null;
-        this.matchingCells = [];
     }
 };
