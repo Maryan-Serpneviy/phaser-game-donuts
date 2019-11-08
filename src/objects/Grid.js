@@ -107,11 +107,11 @@ export const Grid = {
                             this.grid[r][c].image.destroy();
                             //matchMakers.shift(this.grid[r][c]);
                             matchMakers--;
-                            //if (matchMakers === 0) {
+                            if (matchMakers === 0) {
                                 //Grid._calculateDestroyedPerCol();
                                 //Grid._descendImages();
                                 Grid._replenishGrid();
-                            //}
+                            }
                         }
                     });
                 }
