@@ -12,8 +12,7 @@ export const Match = {
 
         for (let r = 0; r < this.grid.length; r++) {
             for (let c = 0; c < this.grid[r].length; c++) {
-                Match._isMakingRowMatch(row, col);
-                Match._isMakingColMatch(row, col);
+                return Match._isMakingRowMatch(row, col) || Match._isMakingColMatch(row, col);
             }
         }
     },

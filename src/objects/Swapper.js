@@ -1,6 +1,5 @@
 import Const from '../utils/constants';
 import Tween from '../utils/tweens';
-import { Match } from './Match';
 import { Grid } from './Grid';
 
 export const Swapper = {
@@ -17,7 +16,6 @@ export const Swapper = {
             this.selected.setScale(Const.SCALE.GEM * Const.COEF.GEM_ACTIVE);
         }
 
-        Match.isMakingMatch.call(this, this.currCoords.r, this.currCoords.c);
         if (this.prev) {
             // if second pick is on the same line
             const isOnSameLine = Swapper._checkMoveValidity.call(this);
@@ -41,41 +39,40 @@ export const Swapper = {
     },
 
     _checkMoveValidity() {
-        if (this.currCoords.r === this.prevCoords.r && this.currCoords.c === this.prevCoords.c - 1 ||
+        return (
+            this.currCoords.r === this.prevCoords.r && this.currCoords.c === this.prevCoords.c - 1 ||
             this.currCoords.r === this.prevCoords.r && this.currCoords.c === this.prevCoords.c + 1 ||
             this.currCoords.c === this.prevCoords.c && this.currCoords.r === this.prevCoords.r - 1 ||
-            this.currCoords.c === this.prevCoords.c && this.currCoords.r === this.prevCoords.r + 1) {
-                return true;
-        }
-        return false;
+            this.currCoords.c === this.prevCoords.c && this.currCoords.r === this.prevCoords.r + 1
+        );
     },
 
     _checkForMatch() {
         // swapping gem type
-        const cacheType = this.grid[this.prevCoords.r][this.prevCoords.c].type;
-        this.grid[this.prevCoords.r][this.prevCoords.c].type = this.grid[this.currCoords.r][this.currCoords.c].type;
-        this.grid[this.currCoords.r][this.currCoords.c].type = cacheType;
+        const cacheType = this.grid[this.currCoords.r][this.currCoords.c].type;
+        this.grid[this.currCoords.r][this.currCoords.c].type = this.grid[this.prevCoords.r][this.prevCoords.c].type;
+        this.grid[this.prevCoords.r][this.prevCoords.c].type = cacheType;
 
-        return Grid._matchRow(this.currCoords.r, this.currCoords.c) ||
-               Grid._matchCol(this.currCoords.r, this.currCoords.c) ||
-               Grid._matchRow(this.prevCoords.r, this.prevCoords.c) ||
-               Grid._matchCol(this.prevCoords.r, this.prevCoords.c);
+        return Grid.matchRow(this.currCoords.r, this.currCoords.c) ||
+               Grid.matchCol(this.currCoords.r, this.currCoords.c) ||
+               Grid.matchRow(this.prevCoords.r, this.prevCoords.c) ||
+               Grid.matchCol(this.prevCoords.r, this.prevCoords.c);
     },
 
     _swapHandler(isValid) {
         if (isValid) {
             // swapping image reference
-            const cacheImg = this.grid[this.prevCoords.r][this.prevCoords.c].image;
-            this.grid[this.prevCoords.r][this.prevCoords.c].image = this.grid[this.currCoords.r][this.currCoords.c].image;
-            this.grid[this.currCoords.r][this.currCoords.c].image = cacheImg;
+            const cacheImg = this.grid[this.currCoords.r][this.currCoords.c].image;
+            this.grid[this.currCoords.r][this.currCoords.c].image = this.grid[this.prevCoords.r][this.prevCoords.c].image;
+            this.grid[this.prevCoords.r][this.prevCoords.c].image = cacheImg;
 
             Tween.swap.valid.call(this, this.prev, this.selected);
             Tween.swap.valid.call(this, this.selected, this.prev, Grid.destroy);
         } else {
             // swapping back gem type
-            const cacheType = this.grid[this.currCoords.r][this.currCoords.c].type;
-            this.grid[this.currCoords.r][this.currCoords.c].type = this.grid[this.prevCoords.r][this.prevCoords.c].type;
-            this.grid[this.prevCoords.r][this.prevCoords.c].type = cacheType;
+            const cacheType = this.grid[this.prevCoords.r][this.prevCoords.c].type;
+            this.grid[this.prevCoords.r][this.prevCoords.c].type = this.grid[this.currCoords.r][this.currCoords.c].type;
+            this.grid[this.currCoords.r][this.currCoords.c].type = cacheType;
 
             Tween.swap.invalid.call(this, this.prev, this.selected);
             Tween.swap.invalid.call(this, this.selected, this.prev);

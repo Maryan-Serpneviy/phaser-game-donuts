@@ -32,17 +32,22 @@ export default {
             });
         }
     },
-    descend(cell, destroyed) {
+    descend(cell, destroyed, after) {
         this.tweens.add({
             targets: cell.image,
             y: cell.image.y + Const.GAME.GEMH * destroyed,
             duration: 400,
             ease: 'Elastic',
             rotation: 40,
-            callbackScope: this
+            callbackScope: this,
+            onComplete: () => {
+                if (after) {
+                    after.call(this);
+                }
+            }
         });
     },
-    render(cell) {
+    render(cell, after) {
         this.tweens.add({
             targets: cell.image,
             scaleX: Const.SCALE.GEM,
@@ -50,7 +55,12 @@ export default {
             delay: 250,
             duration: 250,
             ease: 'Linear',
-            callbackScope: this
+            callbackScope: this,
+            onComplete: () => {
+                if (after) {
+                    after.call(this);
+                }
+            }
         });
     }
 };
